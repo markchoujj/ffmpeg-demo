@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Details - Size Comparison Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: calc(100vw - 400px);
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .screen-info {
+            font-size: 0.9rem;
+            color: #999;
+            font-weight: 500;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: #5568d3;
+        }
+
+        .video-selector {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .video-btn {
+            padding: 10px 20px;
+            background: #f5f5f5;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            color: #333;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .video-btn:hover {
+            background: #e8e8e8;
+            transform: translateY(-2px);
+        }
+
+        .video-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .quality-toggle {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .quality-btn {
+            padding: 12px 30px;
+            background: #f5f5f5;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            color: #333;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quality-btn:hover {
+            background: #e8e8e8;
+        }
+
+        .quality-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .video-display {
+            margin-bottom: 40px;
+        }
+
+        .video-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .video-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .video-specs {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .video-container.portrait {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .video-player {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .control-btn {
+            padding: 12px 30px;
+            background: #667eea;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .control-btn:active {
+            transform: translateY(0);
+        }
+
+        .size-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        .size-info h3 {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .size-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .size-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .size-label {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        .size-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                max-width: calc(100vw - 200px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                max-width: 100%;
+                padding: 20px;
+            }
+
+            .title {
+                font-size: 1.8rem;
+            }
+
+            .video-selector {
+                gap: 10px;
+            }
+
+            .video-btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Grid View</a>
+        
+        <header class="header">
+            <h1 class="title">Video Size Comparison Demo</h1>
+            <p class="subtitle">See how videos look at different display sizes</p>
+            <p class="screen-info">Container Width: <span id="containerWidth">-</span>px (Screen Width - 400px)</p>
+        </header>
+
+        <div class="video-selector">
+            <button class="video-btn active" data-video="brain">Brain</button>
+            <button class="video-btn" data-video="digital-earth">Digital Earth</button>
+            <button class="video-btn" data-video="dubai-landmark">Dubai Landmark</button>
+            <button class="video-btn" data-video="galaxy">Galaxy</button>
+            <button class="video-btn" data-video="pumpkin">Pumpkin</button>
+            <button class="video-btn" data-video="school-packup">School Packup</button>
+            <button class="video-btn" data-video="sea">Sea</button>
+            <button class="video-btn" data-video="smoke">Smoke</button>
+            <button class="video-btn" data-video="sunrise">Sunrise</button>
+            <button class="video-btn" data-video="money">Money</button>
+        </div>
+
+        <div class="quality-toggle">
+            <button class="quality-btn active" data-quality="22-slow">CRF 22 - Slow</button>
+            <button class="quality-btn" data-quality="26-fast">CRF 26 - Fast</button>
+        </div>
+
+        <div class="video-display">
+            <div class="video-info">
+                <h2 class="video-title" id="videoTitle">Brain</h2>
+                <p class="video-specs" id="videoSpecs">CRF 22 - Slower Preset | 540p Resolution</p>
+            </div>
+
+            <div class="video-container" id="videoContainer">
+                <video class="video-player" id="mainVideo" controls loop muted autoplay>
+                    <source id="videoSource" src="22-slow/brain_540p_22_slow.mp4" type="video/mp4">
+                </video>
+            </div>
+
+            <div class="controls">
+                <button class="control-btn" id="playPauseBtn">Play / Pause</button>
+                <button class="control-btn" id="restartBtn">Restart</button>
+            </div>
+        </div>
+
+        <div class="size-info">
+            <h3>Video Information</h3>
+            <div class="size-grid">
+                <div class="size-item">
+                    <div class="size-label">Container Width</div>
+                    <div class="size-value" id="containerWidthValue">-</div>
+                </div>
+                <div class="size-item">
+                    <div class="size-label">Video Width</div>
+                    <div class="size-value" id="videoWidthValue">-</div>
+                </div>
+                <div class="size-item">
+                    <div class="size-label">Video Height</div>
+                    <div class="size-value" id="videoHeightValue">-</div>
+                </div>
+                <div class="size-item">
+                    <div class="size-label">Aspect Ratio</div>
+                    <div class="size-value" id="aspectRatioValue">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const videos = {
+            "brain": { name: "Brain", orientation: "landscape" },
+            "digital-earth": { name: "Digital Earth", orientation: "landscape" },
+            "dubai-landmark": { name: "Dubai Landmark", orientation: "landscape" },
+            "galaxy": { name: "Galaxy", orientation: "landscape" },
+            "pumpkin": { name: "Pumpkin", orientation: "landscape" },
+            "school-packup": { name: "School Packup", orientation: "landscape" },
+            "sea": { name: "Sea", orientation: "landscape" },
+            "smoke": { name: "Smoke", orientation: "landscape" },
+            "sunrise": { name: "Sunrise", orientation: "landscape" },
+            "money": { name: "Money", orientation: "portrait" }
+        };
+
+        let currentVideo = "brain";
+        let currentQuality = "22-slow";
+
+        const videoButtons = document.querySelectorAll(".video-btn");
+        const qualityButtons = document.querySelectorAll(".quality-btn");
+        const mainVideo = document.getElementById("mainVideo");
+        const videoSource = document.getElementById("videoSource");
+        const videoContainer = document.getElementById("videoContainer");
+        const videoTitle = document.getElementById("videoTitle");
+        const videoSpecs = document.getElementById("videoSpecs");
+        const playPauseBtn = document.getElementById("playPauseBtn");
+        const restartBtn = document.getElementById("restartBtn");
+
+        // Video selection
+        videoButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                currentVideo = button.dataset.video;
+                videoButtons.forEach(btn => btn.classList.remove("active"));
+                button.classList.add("active");
+                updateVideo();
+            });
+        });
+
+        // Quality selection
+        qualityButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                currentQuality = button.dataset.quality;
+                qualityButtons.forEach(btn => btn.classList.remove("active"));
+                button.classList.add("active");
+                updateVideo();
+            });
+        });
+
+        // Update video source and info
+        function updateVideo() {
+            const videoInfo = videos[currentVideo];
+            const qualityName = currentQuality === "22-slow" ? "CRF 22 - Slower Preset" : "CRF 26 - Faster Preset";
+            const fileName = `${currentVideo}_540p_${currentQuality.replace("-", "_")}.mp4`;
+            
+            videoSource.src = `${currentQuality}/${fileName}`;
+            videoTitle.textContent = videoInfo.name;
+            videoSpecs.textContent = `${qualityName} | 540p Resolution`;
+            
+            // Update container class for portrait videos
+            if (videoInfo.orientation === "portrait") {
+                videoContainer.classList.add("portrait");
+            } else {
+                videoContainer.classList.remove("portrait");
+            }
+            
+            mainVideo.load();
+            mainVideo.play();
+            updateVideoInfo();
+        }
+
+        // Controls
+        playPauseBtn.addEventListener("click", () => {
+            if (mainVideo.paused) {
+                mainVideo.play();
+            } else {
+                mainVideo.pause();
+            }
+        });
+
+        restartBtn.addEventListener("click", () => {
+            mainVideo.currentTime = 0;
+            mainVideo.play();
+        });
+
+        // Update size information
+        function updateVideoInfo() {
+            const container = document.querySelector(".container");
+            const containerWidth = container.offsetWidth;
+            
+            document.getElementById("containerWidth").textContent = containerWidth;
+            document.getElementById("containerWidthValue").textContent = containerWidth + "px";
+            
+            // Wait for video metadata to load
+            mainVideo.addEventListener("loadedmetadata", () => {
+                const videoWidth = mainVideo.videoWidth;
+                const videoHeight = mainVideo.videoHeight;
+                const aspectRatio = (videoWidth / videoHeight).toFixed(2);
+                
+                document.getElementById("videoWidthValue").textContent = videoWidth + "px";
+                document.getElementById("videoHeightValue").textContent = videoHeight + "px";
+                document.getElementById("aspectRatioValue").textContent = aspectRatio;
+            });
+        }
+
+        // Update on window resize
+        window.addEventListener("resize", updateVideoInfo);
+        
+        // Initial load
+        updateVideoInfo();
+    </script>
+</body>
+</html>
+

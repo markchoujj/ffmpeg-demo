@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Quality Comparison - 22 Slow vs 26 Fast</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .quality-selector {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .quality-btn {
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .quality-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .quality-btn.active {
+            background: white;
+            color: #667eea;
+            border-color: white;
+        }
+
+        .video-section {
+            display: none;
+        }
+
+        .video-section.active {
+            display: block;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            grid-column: span 2;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .video-card[data-orientation="portrait"] {
+            grid-column: span 1;
+            grid-row: span 2;
+        }
+
+        .thumbnail-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .video-card[data-orientation="portrait"] .thumbnail-container {
+            padding-bottom: 177.78%;
+        }
+
+        .thumbnail {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-card.playing .thumbnail {
+            opacity: 0;
+        }
+
+        .video-card.playing .video-player {
+            opacity: 1;
+        }
+
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .play-icon::after {
+            content: "";
+            width: 0;
+            height: 0;
+            border-left: 20px solid #667eea;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            margin-left: 4px;
+        }
+
+        .video-card.playing .play-icon {
+            opacity: 0;
+        }
+
+        .video-card:hover .play-icon {
+            transform: translate(-50%, -50%) scale(1.1);
+            background: white;
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 1.8rem;
+            }
+
+            .video-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .video-card {
+                grid-column: span 1;
+            }
+
+            .video-card[data-orientation="portrait"] {
+                grid-column: span 1;
+                grid-row: span 2;
+            }
+
+            .quality-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Video Quality Comparison</h1>
+            <p class="subtitle">Compare CRF 22 (Slower Preset) vs CRF 26 (Faster Preset)</p>
+            <div class="quality-selector">
+                <button class="quality-btn active" data-quality="22-slow">CRF 22 - Slow</button>
+                <button class="quality-btn" data-quality="26-fast">CRF 26 - Fast</button>
+            </div>
+            <div style="margin-top: 20px;">
+                <a href="details.html" style="color: white; text-decoration: none; padding: 10px 25px; background: rgba(255, 255, 255, 0.2); border-radius: 20px; border: 2px solid rgba(255, 255, 255, 0.3); font-weight: 600; transition: all 0.3s ease; display: inline-block;">View Details Page →</a>
+            </div>
+        </header>
+
+        <div class="video-content">
+            <!-- CRF 22 Slow Videos -->
+            <div class="video-section active" data-quality="22-slow">
+                <h2 class="section-title">CRF 22 - Slower Preset (Higher Quality)</h2>
+                <div class="video-grid">
+                    <div class="video-card" data-orientation="landscape">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/22-slow/brain_540p_22_slow.jpg" alt="brain" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="22-slow/brain_540p_22_slow.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                    <div class="video-card" data-orientation="landscape">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/22-slow/digital-earth_540p_22_slow.jpg" alt="digital-earth" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="22-slow/digital-earth_540p_22_slow.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                    <div class="video-card" data-orientation="landscape">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/22-slow/dubai-landmark_540p_22_slow.jpg" alt="dubai-landmark" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="22-slow/dubai-landmark_540p_22_slow.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                    <div class="video-card" data-orientation="landscape">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/22-slow/galaxy_540p_22_slow.jpg" alt="galaxy" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="22-slow/galaxy_540p_22_slow.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                    <div class="video-card" data-orientation="landscape">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/22-slow/pumpkin_540p_22_slow.jpg" alt="pumpkin" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="22-slow/pumpkin_540p_22_slow.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                    <div class="video-card" data-orientation="landscape">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/22-slow/school-packup_540p_22_slow.jpg" alt="school-packup" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="22-slow/school-packup_540p_22_slow.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                    <div class="video-card" data-orientation="landscape">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/22-slow/sea_540p_22_slow.jpg" alt="sea" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="22-slow/sea_540p_22_slow.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                    <div class="video-card" data-orientation="landscape">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/22-slow/smoke_540p_22_slow.jpg" alt="smoke" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="22-slow/smoke_540p_22_slow.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                    <div class="video-card" data-orientation="landscape">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/22-slow/sunrise_540p_22_slow.jpg" alt="sunrise" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="22-slow/sunrise_540p_22_slow.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                    <div class="video-card" data-orientation="portrait">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/22-slow/money_540p_22_slow.jpg" alt="money" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="22-slow/money_540p_22_slow.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CRF 26 Fast Videos -->
+            <div class="video-section" data-quality="26-fast">
+                <h2 class="section-title">CRF 26 - Faster Preset (Smaller File Size)</h2>
+                <div class="video-grid">
+                    <div class="video-card" data-orientation="landscape">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/26-fast/brain_540p_26_fast.jpg" alt="brain" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="26-fast/brain_540p_26_fast.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                    <div class="video-card" data-orientation="landscape">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/26-fast/digital-earth_540p_26_fast.jpg" alt="digital-earth" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="26-fast/digital-earth_540p_26_fast.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                    <div class="video-card" data-orientation="landscape">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/26-fast/dubai-landmark_540p_26_fast.jpg" alt="dubai-landmark" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="26-fast/dubai-landmark_540p_26_fast.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                    <div class="video-card" data-orientation="landscape">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/26-fast/galaxy_540p_26_fast.jpg" alt="galaxy" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="26-fast/galaxy_540p_26_fast.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                    <div class="video-card" data-orientation="landscape">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/26-fast/pumpkin_540p_26_fast.jpg" alt="pumpkin" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="26-fast/pumpkin_540p_26_fast.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                    <div class="video-card" data-orientation="landscape">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/26-fast/school-packup_540p_26_fast.jpg" alt="school-packup" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="26-fast/school-packup_540p_26_fast.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                    <div class="video-card" data-orientation="landscape">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/26-fast/sea_540p_26_fast.jpg" alt="sea" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="26-fast/sea_540p_26_fast.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                    <div class="video-card" data-orientation="landscape">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/26-fast/smoke_540p_26_fast.jpg" alt="smoke" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="26-fast/smoke_540p_26_fast.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                    <div class="video-card" data-orientation="landscape">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/26-fast/sunrise_540p_26_fast.jpg" alt="sunrise" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="26-fast/sunrise_540p_26_fast.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                    <div class="video-card" data-orientation="portrait">
+                        <div class="thumbnail-container">
+                            <img src="thumbnails/26-fast/money_540p_26_fast.jpg" alt="money" class="thumbnail">
+                            <video class="video-player" loop muted preload="none">
+                                <source src="26-fast/money_540p_26_fast.mp4" type="video/mp4">
+                            </video>
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quality selector functionality
+        const qualityButtons = document.querySelectorAll(".quality-btn");
+        const videoSections = document.querySelectorAll(".video-section");
+
+        qualityButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                const selectedQuality = button.dataset.quality;
+
+                // Update active button
+                qualityButtons.forEach(btn => btn.classList.remove("active"));
+                button.classList.add("active");
+
+                // Stop all playing videos
+                document.querySelectorAll(".video-card.playing").forEach(card => {
+                    const video = card.querySelector(".video-player");
+                    video.pause();
+                    video.currentTime = 0;
+                    card.classList.remove("playing");
+                });
+
+                // Show selected section
+                videoSections.forEach(section => {
+                    if (section.dataset.quality === selectedQuality) {
+                        section.classList.add("active");
+                    } else {
+                        section.classList.remove("active");
+                    }
+                });
+            });
+        });
+
+        // Video play on hover functionality
+        const videoCards = document.querySelectorAll(".video-card");
+
+        videoCards.forEach(card => {
+            const video = card.querySelector(".video-player");
+
+            card.addEventListener("mouseenter", () => {
+                video.play();
+                card.classList.add("playing");
+            });
+
+            card.addEventListener("mouseleave", () => {
+                video.pause();
+                video.currentTime = 0;
+                card.classList.remove("playing");
+            });
+
+            // Loop the video
+            video.addEventListener("ended", () => {
+                video.currentTime = 0;
+                video.play();
+            });
+        });
+
+        // Intersection Observer for lazy loading videos
+        const observerOptions = {
+            root: null,
+            rootMargin: "50px",
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const video = entry.target;
+                    if (video.preload === "none") {
+                        video.preload = "metadata";
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll(".video-player").forEach(video => {
+            observer.observe(video);
+        });
+    </script>
+</body>
+</html>
+
