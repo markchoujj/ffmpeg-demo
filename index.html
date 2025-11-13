@@ -196,6 +196,71 @@
             background: white;
         }
 
+        .thumbnail-quality-selector {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .thumb-quality-btn {
+            padding: 10px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .thumb-quality-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .thumb-quality-btn.active {
+            background: white;
+            color: #667eea;
+            border-color: white;
+        }
+
+        .thumbnail-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            grid-column: span 2;
+        }
+
+        .thumbnail-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .thumbnail-card[data-orientation="portrait"] {
+            grid-column: span 1;
+        }
+
+        .thumb-display {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .thumb-info {
+            padding: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+            background: white;
+        }
+
         @media (max-width: 768px) {
             .title {
                 font-size: 1.8rem;
@@ -230,6 +295,7 @@
             <div class="quality-selector">
                 <button class="quality-btn active" data-quality="22-slow">CRF 22 - Slow</button>
                 <button class="quality-btn" data-quality="26-fast">CRF 26 - Fast</button>
+                <button class="quality-btn" data-quality="thumbnails">Thumbnails</button>
             </div>
             <div style="margin-top: 20px;">
                 <a href="details.html" style="color: white; text-decoration: none; padding: 10px 25px; background: rgba(255, 255, 255, 0.2); border-radius: 20px; border: 2px solid rgba(255, 255, 255, 0.3); font-weight: 600; transition: all 0.3s ease; display: inline-block;">View Details Page →</a>
@@ -243,7 +309,7 @@
                 <div class="video-grid">
                     <div class="video-card" data-orientation="landscape">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/22-slow/brain_540p_22_slow.jpg" alt="brain" class="thumbnail">
+                            <img src="thumbnails/brain_preview_med.jpg" alt="brain" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="22-slow/brain_540p_22_slow.mp4" type="video/mp4">
                             </video>
@@ -252,7 +318,7 @@
                     </div>
                     <div class="video-card" data-orientation="landscape">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/22-slow/digital-earth_540p_22_slow.jpg" alt="digital-earth" class="thumbnail">
+                            <img src="thumbnails/digital-earth_preview_med.jpg" alt="digital-earth" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="22-slow/digital-earth_540p_22_slow.mp4" type="video/mp4">
                             </video>
@@ -261,7 +327,7 @@
                     </div>
                     <div class="video-card" data-orientation="landscape">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/22-slow/dubai-landmark_540p_22_slow.jpg" alt="dubai-landmark" class="thumbnail">
+                            <img src="thumbnails/dubai-landmark_preview_med.jpg" alt="dubai-landmark" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="22-slow/dubai-landmark_540p_22_slow.mp4" type="video/mp4">
                             </video>
@@ -270,7 +336,7 @@
                     </div>
                     <div class="video-card" data-orientation="landscape">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/22-slow/galaxy_540p_22_slow.jpg" alt="galaxy" class="thumbnail">
+                            <img src="thumbnails/galaxy_preview_med.jpg" alt="galaxy" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="22-slow/galaxy_540p_22_slow.mp4" type="video/mp4">
                             </video>
@@ -279,7 +345,7 @@
                     </div>
                     <div class="video-card" data-orientation="landscape">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/22-slow/pumpkin_540p_22_slow.jpg" alt="pumpkin" class="thumbnail">
+                            <img src="thumbnails/pumpkin_preview_med.jpg" alt="pumpkin" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="22-slow/pumpkin_540p_22_slow.mp4" type="video/mp4">
                             </video>
@@ -288,7 +354,7 @@
                     </div>
                     <div class="video-card" data-orientation="landscape">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/22-slow/school-packup_540p_22_slow.jpg" alt="school-packup" class="thumbnail">
+                            <img src="thumbnails/school-packup_preview_med.jpg" alt="school-packup" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="22-slow/school-packup_540p_22_slow.mp4" type="video/mp4">
                             </video>
@@ -297,7 +363,7 @@
                     </div>
                     <div class="video-card" data-orientation="landscape">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/22-slow/sea_540p_22_slow.jpg" alt="sea" class="thumbnail">
+                            <img src="thumbnails/sea_preview_med.jpg" alt="sea" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="22-slow/sea_540p_22_slow.mp4" type="video/mp4">
                             </video>
@@ -306,7 +372,7 @@
                     </div>
                     <div class="video-card" data-orientation="landscape">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/22-slow/smoke_540p_22_slow.jpg" alt="smoke" class="thumbnail">
+                            <img src="thumbnails/smoke_preview_med.jpg" alt="smoke" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="22-slow/smoke_540p_22_slow.mp4" type="video/mp4">
                             </video>
@@ -315,7 +381,7 @@
                     </div>
                     <div class="video-card" data-orientation="landscape">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/22-slow/sunrise_540p_22_slow.jpg" alt="sunrise" class="thumbnail">
+                            <img src="thumbnails/sunrise_preview_med.jpg" alt="sunrise" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="22-slow/sunrise_540p_22_slow.mp4" type="video/mp4">
                             </video>
@@ -324,7 +390,7 @@
                     </div>
                     <div class="video-card" data-orientation="portrait">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/22-slow/money_540p_22_slow.jpg" alt="money" class="thumbnail">
+                            <img src="thumbnails/money_preview_med.jpg" alt="money" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="22-slow/money_540p_22_slow.mp4" type="video/mp4">
                             </video>
@@ -340,7 +406,7 @@
                 <div class="video-grid">
                     <div class="video-card" data-orientation="landscape">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/26-fast/brain_540p_26_fast.jpg" alt="brain" class="thumbnail">
+                            <img src="thumbnails/brain_preview_med.jpg" alt="brain" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="26-fast/brain_540p_26_fast.mp4" type="video/mp4">
                             </video>
@@ -349,7 +415,7 @@
                     </div>
                     <div class="video-card" data-orientation="landscape">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/26-fast/digital-earth_540p_26_fast.jpg" alt="digital-earth" class="thumbnail">
+                            <img src="thumbnails/digital-earth_preview_med.jpg" alt="digital-earth" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="26-fast/digital-earth_540p_26_fast.mp4" type="video/mp4">
                             </video>
@@ -358,7 +424,7 @@
                     </div>
                     <div class="video-card" data-orientation="landscape">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/26-fast/dubai-landmark_540p_26_fast.jpg" alt="dubai-landmark" class="thumbnail">
+                            <img src="thumbnails/dubai-landmark_preview_med.jpg" alt="dubai-landmark" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="26-fast/dubai-landmark_540p_26_fast.mp4" type="video/mp4">
                             </video>
@@ -367,7 +433,7 @@
                     </div>
                     <div class="video-card" data-orientation="landscape">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/26-fast/galaxy_540p_26_fast.jpg" alt="galaxy" class="thumbnail">
+                            <img src="thumbnails/galaxy_preview_med.jpg" alt="galaxy" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="26-fast/galaxy_540p_26_fast.mp4" type="video/mp4">
                             </video>
@@ -376,7 +442,7 @@
                     </div>
                     <div class="video-card" data-orientation="landscape">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/26-fast/pumpkin_540p_26_fast.jpg" alt="pumpkin" class="thumbnail">
+                            <img src="thumbnails/pumpkin_preview_med.jpg" alt="pumpkin" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="26-fast/pumpkin_540p_26_fast.mp4" type="video/mp4">
                             </video>
@@ -385,7 +451,7 @@
                     </div>
                     <div class="video-card" data-orientation="landscape">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/26-fast/school-packup_540p_26_fast.jpg" alt="school-packup" class="thumbnail">
+                            <img src="thumbnails/school-packup_preview_med.jpg" alt="school-packup" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="26-fast/school-packup_540p_26_fast.mp4" type="video/mp4">
                             </video>
@@ -394,7 +460,7 @@
                     </div>
                     <div class="video-card" data-orientation="landscape">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/26-fast/sea_540p_26_fast.jpg" alt="sea" class="thumbnail">
+                            <img src="thumbnails/sea_preview_med.jpg" alt="sea" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="26-fast/sea_540p_26_fast.mp4" type="video/mp4">
                             </video>
@@ -403,7 +469,7 @@
                     </div>
                     <div class="video-card" data-orientation="landscape">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/26-fast/smoke_540p_26_fast.jpg" alt="smoke" class="thumbnail">
+                            <img src="thumbnails/smoke_preview_med.jpg" alt="smoke" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="26-fast/smoke_540p_26_fast.mp4" type="video/mp4">
                             </video>
@@ -412,7 +478,7 @@
                     </div>
                     <div class="video-card" data-orientation="landscape">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/26-fast/sunrise_540p_26_fast.jpg" alt="sunrise" class="thumbnail">
+                            <img src="thumbnails/sunrise_preview_med.jpg" alt="sunrise" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="26-fast/sunrise_540p_26_fast.mp4" type="video/mp4">
                             </video>
@@ -421,12 +487,64 @@
                     </div>
                     <div class="video-card" data-orientation="portrait">
                         <div class="thumbnail-container">
-                            <img src="thumbnails/26-fast/money_540p_26_fast.jpg" alt="money" class="thumbnail">
+                            <img src="thumbnails/money_preview_med.jpg" alt="money" class="thumbnail">
                             <video class="video-player" loop muted preload="none">
                                 <source src="26-fast/money_540p_26_fast.mp4" type="video/mp4">
                             </video>
                             <div class="play-icon"></div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thumbnails Section -->
+            <div class="video-section" data-quality="thumbnails">
+                <h2 class="section-title">Thumbnail Quality Comparison</h2>
+                <div class="thumbnail-quality-selector">
+                    <button class="thumb-quality-btn active" data-thumb-quality="low">Low Quality</button>
+                    <button class="thumb-quality-btn" data-thumb-quality="med">Medium Quality</button>
+                    <button class="thumb-quality-btn" data-thumb-quality="high">High Quality</button>
+                </div>
+                <div class="video-grid">
+                    <div class="thumbnail-card" data-orientation="landscape" data-video="brain">
+                        <img src="thumbnails/brain_preview_med.jpg" alt="brain" class="thumb-display">
+                        <div class="thumb-info">Brain</div>
+                    </div>
+                    <div class="thumbnail-card" data-orientation="landscape" data-video="digital-earth">
+                        <img src="thumbnails/digital-earth_preview_med.jpg" alt="digital-earth" class="thumb-display">
+                        <div class="thumb-info">Digital Earth</div>
+                    </div>
+                    <div class="thumbnail-card" data-orientation="landscape" data-video="dubai-landmark">
+                        <img src="thumbnails/dubai-landmark_preview_med.jpg" alt="dubai-landmark" class="thumb-display">
+                        <div class="thumb-info">Dubai Landmark</div>
+                    </div>
+                    <div class="thumbnail-card" data-orientation="landscape" data-video="galaxy">
+                        <img src="thumbnails/galaxy_preview_med.jpg" alt="galaxy" class="thumb-display">
+                        <div class="thumb-info">Galaxy</div>
+                    </div>
+                    <div class="thumbnail-card" data-orientation="landscape" data-video="pumpkin">
+                        <img src="thumbnails/pumpkin_preview_med.jpg" alt="pumpkin" class="thumb-display">
+                        <div class="thumb-info">Pumpkin</div>
+                    </div>
+                    <div class="thumbnail-card" data-orientation="landscape" data-video="school-packup">
+                        <img src="thumbnails/school-packup_preview_med.jpg" alt="school-packup" class="thumb-display">
+                        <div class="thumb-info">School Packup</div>
+                    </div>
+                    <div class="thumbnail-card" data-orientation="landscape" data-video="sea">
+                        <img src="thumbnails/sea_preview_med.jpg" alt="sea" class="thumb-display">
+                        <div class="thumb-info">Sea</div>
+                    </div>
+                    <div class="thumbnail-card" data-orientation="landscape" data-video="smoke">
+                        <img src="thumbnails/smoke_preview_med.jpg" alt="smoke" class="thumb-display">
+                        <div class="thumb-info">Smoke</div>
+                    </div>
+                    <div class="thumbnail-card" data-orientation="landscape" data-video="sunrise">
+                        <img src="thumbnails/sunrise_preview_med.jpg" alt="sunrise" class="thumb-display">
+                        <div class="thumb-info">Sunrise</div>
+                    </div>
+                    <div class="thumbnail-card" data-orientation="portrait" data-video="money">
+                        <img src="thumbnails/money_preview_med.jpg" alt="money" class="thumb-display">
+                        <div class="thumb-info">Money</div>
                     </div>
                 </div>
             </div>
@@ -509,6 +627,27 @@
 
         document.querySelectorAll(".video-player").forEach(video => {
             observer.observe(video);
+        });
+
+        // Thumbnail quality selector functionality
+        const thumbQualityButtons = document.querySelectorAll(".thumb-quality-btn");
+        const thumbnailCards = document.querySelectorAll(".thumbnail-card");
+
+        thumbQualityButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                const quality = button.dataset.thumbQuality;
+
+                // Update active button
+                thumbQualityButtons.forEach(btn => btn.classList.remove("active"));
+                button.classList.add("active");
+
+                // Update all thumbnail images
+                thumbnailCards.forEach(card => {
+                    const videoName = card.dataset.video;
+                    const img = card.querySelector(".thumb-display");
+                    img.src = `thumbnails/${videoName}_preview_${quality}.jpg`;
+                });
+            });
         });
     </script>
 </body>
