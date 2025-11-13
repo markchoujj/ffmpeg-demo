@@ -261,6 +261,143 @@
             background: white;
         }
 
+        .thumbnail-card {
+            cursor: pointer;
+        }
+
+        /* Thumbnail Detail Modal */
+        .thumb-detail-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .thumb-detail-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .thumb-detail-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 1200px;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .thumb-detail-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .thumb-detail-close:hover {
+            background: #5568d3;
+            transform: rotate(90deg);
+        }
+
+        .thumb-detail-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .thumb-detail-quality-selector {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .thumb-detail-quality-btn {
+            padding: 12px 30px;
+            background: #f5f5f5;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            color: #333;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .thumb-detail-quality-btn:hover {
+            background: #e8e8e8;
+        }
+
+        .thumb-detail-quality-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .thumb-detail-image-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .thumb-detail-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .thumb-detail-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .thumb-detail-info-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .thumb-detail-info-label {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .thumb-detail-info-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #333;
+        }
+
         @media (max-width: 768px) {
             .title {
                 font-size: 1.8rem;
@@ -283,6 +420,42 @@
             .quality-btn {
                 padding: 10px 20px;
                 font-size: 0.9rem;
+            }
+
+            .thumb-detail-modal {
+                padding: 20px;
+            }
+
+            .thumb-detail-content {
+                padding: 30px 20px;
+            }
+
+            .thumb-detail-title {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+
+            .thumb-detail-quality-selector {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .thumb-detail-quality-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+
+            .thumb-detail-info {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .thumb-detail-info-item {
+                padding: 15px;
+            }
+
+            .thumb-detail-info-value {
+                font-size: 1rem;
             }
         }
     </style>
@@ -551,6 +724,43 @@
         </div>
     </div>
 
+    <!-- Thumbnail Detail Modal -->
+    <div class="thumb-detail-modal" id="thumbDetailModal">
+        <div class="thumb-detail-content">
+            <button class="thumb-detail-close" id="thumbDetailClose">×</button>
+            <h2 class="thumb-detail-title" id="thumbDetailTitle">Brain</h2>
+            
+            <div class="thumb-detail-quality-selector">
+                <button class="thumb-detail-quality-btn active" data-detail-quality="low">Low Quality</button>
+                <button class="thumb-detail-quality-btn" data-detail-quality="med">Medium Quality</button>
+                <button class="thumb-detail-quality-btn" data-detail-quality="high">High Quality</button>
+            </div>
+
+            <div class="thumb-detail-image-container">
+                <img src="" alt="thumbnail detail" class="thumb-detail-image" id="thumbDetailImage">
+            </div>
+
+            <div class="thumb-detail-info">
+                <div class="thumb-detail-info-item">
+                    <div class="thumb-detail-info-label">Current Quality</div>
+                    <div class="thumb-detail-info-value" id="thumbDetailQualityText">Medium</div>
+                </div>
+                <div class="thumb-detail-info-item">
+                    <div class="thumb-detail-info-label">Image Width</div>
+                    <div class="thumb-detail-info-value" id="thumbDetailWidth">-</div>
+                </div>
+                <div class="thumb-detail-info-item">
+                    <div class="thumb-detail-info-label">Image Height</div>
+                    <div class="thumb-detail-info-value" id="thumbDetailHeight">-</div>
+                </div>
+                <div class="thumb-detail-info-item">
+                    <div class="thumb-detail-info-label">File Format</div>
+                    <div class="thumb-detail-info-value">JPEG</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Quality selector functionality
         const qualityButtons = document.querySelectorAll(".quality-btn");
@@ -649,6 +859,106 @@
                 });
             });
         });
+
+        // Thumbnail Detail Modal functionality
+        const thumbDetailModal = document.getElementById("thumbDetailModal");
+        const thumbDetailClose = document.getElementById("thumbDetailClose");
+        const thumbDetailTitle = document.getElementById("thumbDetailTitle");
+        const thumbDetailImage = document.getElementById("thumbDetailImage");
+        const thumbDetailQualityText = document.getElementById("thumbDetailQualityText");
+        const thumbDetailWidth = document.getElementById("thumbDetailWidth");
+        const thumbDetailHeight = document.getElementById("thumbDetailHeight");
+        const thumbDetailQualityButtons = document.querySelectorAll(".thumb-detail-quality-btn");
+
+        let currentDetailVideo = "";
+        let currentDetailQuality = "med";
+
+        // Video name mapping
+        const videoNames = {
+            "brain": "Brain",
+            "digital-earth": "Digital Earth",
+            "dubai-landmark": "Dubai Landmark",
+            "galaxy": "Galaxy",
+            "pumpkin": "Pumpkin",
+            "school-packup": "School Packup",
+            "sea": "Sea",
+            "smoke": "Smoke",
+            "sunrise": "Sunrise",
+            "money": "Money"
+        };
+
+        const qualityNames = {
+            "low": "Low",
+            "med": "Medium",
+            "high": "High"
+        };
+
+        // Open modal when clicking thumbnail card
+        thumbnailCards.forEach(card => {
+            card.addEventListener("click", () => {
+                currentDetailVideo = card.dataset.video;
+                currentDetailQuality = "med";
+                
+                thumbDetailTitle.textContent = videoNames[currentDetailVideo];
+                updateDetailImage();
+                
+                // Reset quality buttons
+                thumbDetailQualityButtons.forEach(btn => {
+                    btn.classList.remove("active");
+                    if (btn.dataset.detailQuality === "med") {
+                        btn.classList.add("active");
+                    }
+                });
+                
+                thumbDetailModal.classList.add("active");
+                document.body.style.overflow = "hidden";
+            });
+        });
+
+        // Close modal
+        thumbDetailClose.addEventListener("click", closeModal);
+        thumbDetailModal.addEventListener("click", (e) => {
+            if (e.target === thumbDetailModal) {
+                closeModal();
+            }
+        });
+
+        // ESC key to close
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && thumbDetailModal.classList.contains("active")) {
+                closeModal();
+            }
+        });
+
+        function closeModal() {
+            thumbDetailModal.classList.remove("active");
+            document.body.style.overflow = "";
+        }
+
+        // Quality selector in modal
+        thumbDetailQualityButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                currentDetailQuality = button.dataset.detailQuality;
+                
+                // Update active button
+                thumbDetailQualityButtons.forEach(btn => btn.classList.remove("active"));
+                button.classList.add("active");
+                
+                updateDetailImage();
+            });
+        });
+
+        function updateDetailImage() {
+            const imagePath = `thumbnails/${currentDetailVideo}_preview_${currentDetailQuality}.jpg`;
+            thumbDetailImage.src = imagePath;
+            thumbDetailQualityText.textContent = qualityNames[currentDetailQuality];
+            
+            // Update dimensions when image loads
+            thumbDetailImage.onload = function() {
+                thumbDetailWidth.textContent = this.naturalWidth + "px";
+                thumbDetailHeight.textContent = this.naturalHeight + "px";
+            };
+        }
     </script>
 </body>
 </html>
